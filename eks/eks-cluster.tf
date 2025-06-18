@@ -8,26 +8,26 @@ module "eks" {
   cluster_endpoint_public_access = true
 
   vpc_id                   = module.vpc.vpc_id
-  subnet_ids               = module.vpc.public_subnets
+  subnet_ids               = module.vpc.private_subnets
   control_plane_subnet_ids = module.vpc.private_subnets
-
-  cloudwatch_log_group_retention_in_days = 7
-  create_cloudwatch_log_group            = false
 
   eks_managed_node_groups = {
     ubuntu_nodes = {
-      desired_size    = 3
-      min_size        = 3
-      max_size        = 3
-      instance_types  = ["t3.medium"]
-      ami_type        = "CUSTOM"
-      ami_id          = data.aws_ami.ubuntu.id
+      desired_size = 2
+      min_size     = 1
+      max_size     = 3
+
+      instance_types = ["t3.medium"]
+      ami_type       = "CUSTOM"
+      ami_id         = data.aws_ami.ubuntu.id
 
       labels = {
         role = "worker"
       }
     }
   }
+
+  create_cloudwatch_log_group = false
 
   tags = {
     Environment = "dev"
