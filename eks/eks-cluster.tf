@@ -28,6 +28,19 @@ module "eks" {
       }
     }
   }
+  module "eks" {
+  source          = "terraform-aws-modules/eks/aws"
+  cluster_name    = var.cluster_name
+  cluster_version = "1.29"
+  subnet_ids      = module.vpc.public_subnets
+  vpc_id          = module.vpc.vpc_id
+
+  cloudwatch_log_group_retention_in_days = 7
+
+  # Prevent error if log group already exists
+  create_cloudwatch_log_group = false
+}
+
 
   tags = {
     Environment = "dev"
